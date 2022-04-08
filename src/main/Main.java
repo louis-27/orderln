@@ -20,7 +20,7 @@ public class Main {
 			
 			int inp;
 			do {				
-				System.out.println("Continue as: ");
+				System.out.print("Continue as: ");
 				inp = scan.nextInt();
 				scan.nextLine();
 			} while (!(inp >= 1 && inp <= 3));
