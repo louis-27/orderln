@@ -115,7 +115,53 @@ public class Main {
 	}
 	
 	public void adminMenu() {
-		System.out.print("Enter password: ");
+		String password, cancel;
+		do {
+			System.out.print("Enter password: ");
+			password = scan.nextLine();
+			
+			if (!validateAdminPassword(password)) {
+				do {
+					System.out.print("Incorrect password. Do you want to go back? [Yes | No] ");
+					cancel = scan.nextLine();
+					
+					if (cancel.equalsIgnoreCase("Yes")) {
+						return;
+					}
+				} while (!(cancel.equalsIgnoreCase("Yes") || cancel.equalsIgnoreCase("No")));
+			}
+		} while (!validateAdminPassword(password));
+		
+		boolean isRunning = true;
+		while (isRunning) {
+			utils.clearScreen();
+			
+			printMenu();
+			
+			System.out.println("1. Add to Menu");
+			System.out.println("2. Remove from Menu");
+			System.out.println("3. Exit");
+			
+			int inp;
+			do {
+				System.out.print("Choose: ");
+				inp = scan.nextInt();
+				scan.nextLine();
+			} while (!(inp >= 1 && inp <= 3));
+			
+			utils.clearScreen();
+			switch (inp) {
+				case 1:
+					addToMenu();
+					break;
+				case 2:
+					removeFromMenu();
+					break;
+				case 3:
+					isRunning = false;
+					break;
+			}
+		}
 	}
 	
 	public void printOrders() {
@@ -124,33 +170,41 @@ public class Main {
 		System.out.printf("| %-3s | %-44s | %-15s |\n", "No.", "Customer", "Total Price");
 		System.out.println("========================================================================");
 		
-		int i = 0;
-		for (Customer customer : orders) {
-			Cart customerCart = customer.getCart();
-			String customerName = customer.getName();
-			double totalPrice = customerCart.getSubtotal();
-			
-			if (i > 0) System.out.println("|----------------------------------------------------------------------|");
-			System.out.printf("| %-3s | %-44s | Rp.%-12s |\n", i + 1, customerName, totalPrice);
-			System.out.println("|----------------------------------------------------------------------|");
-
-			ArrayList<Order> customerOrders = customerCart.getOrders();
-			System.out.printf("|\t| %-3s | %-25s | %-8s | %-15s |\n", "No.", "Name", "Quantity", "Price");
-			System.out.println("|\t|==============================================================|");
-
-			int j = 0;
-			for (Order order : customerOrders) {
-				String orderName = order.getName();
-				int qty = order.getQty();
-				double price = order.getPrice();
+		if (orders.isEmpty()) {
+			System.out.printf("| %-68s |\n", "There are no orders yet");
+		} else {
+			int i = 0;
+			for (Customer customer : orders) {
+				Cart customerCart = customer.getCart();
+				String customerName = customer.getName();
+				double totalPrice = customerCart.getSubtotal();
 				
-				System.out.printf("|\t| %-3s | %-25s | %-8s | Rp.%-12s |\n", j + 1, orderName, qty, price);
-				j++;
+				if (i > 0) System.out.println("|----------------------------------------------------------------------|");
+				System.out.printf("| %-3s | %-44s | Rp.%-12s |\n", i + 1, customerName, totalPrice);
+				System.out.println("|----------------------------------------------------------------------|");
+	
+				ArrayList<Order> customerOrders = customerCart.getOrders();
+				System.out.printf("|\t| %-3s | %-25s | %-8s | %-15s |\n", "No.", "Name", "Quantity", "Price");
+				System.out.println("|\t|==============================================================|");
+	
+				int j = 0;
+				for (Order order : customerOrders) {
+					String orderName = order.getName();
+					int qty = order.getQty();
+					double price = order.getPrice();
+					
+					System.out.printf("|\t| %-3s | %-25s | %-8s | Rp.%-12s |\n", j + 1, orderName, qty, price);
+					j++;
+				}
+				i++;
 			}
-			i++;
 		}
 		System.out.println("========================================================================");
 		System.out.println("\n");
+	}
+	
+	public boolean validateAdminPassword(String password) {
+		return (password.equals(admin.getPassword()));
 	}
 	
 	// 2
@@ -267,6 +321,52 @@ public class Main {
 		System.out.println("================================================================");
 		
 		System.out.println("\n");
+	}
+	
+	public void addToMenu() {
+		String name, type;
+		double price;
+		
+		do {
+			System.out.print("Input new menu's name: ");
+			name = scan.nextLine();
+		} while (!(name.length() > 0));
+		
+		do {
+			System.out.print("Input new menu's type [Food | Beverage]: ");
+			type = scan.nextLine();
+		} while (!(type.equalsIgnoreCase("Food") || type.equalsIgnoreCase("Beverage")));
+		
+		do {
+			System.out.print("Input new menu's price: ");
+			price = scan.nextDouble();
+		} while (!(price > 0));
+		
+		if (type.equalsIgnoreCase("Food")) {
+			menu.add(new Food(name, price));
+		} else if (type.equalsIgnoreCase("Beverage")) {
+			menu.add(new Beverages(name, price));
+		}
+		
+		System.out.println("Successfully added new menu");
+		utils.waitUser();
+	}
+	
+	public void removeFromMenu() {
+		int menuNumber;
+		
+		printMenu();
+		
+		do {
+			System.out.printf("Input menu to be removed [1 - %d]: ", menu.size());
+			menuNumber = scan.nextInt();
+			scan.nextLine();
+		} while (!(menuNumber >= 1 && menuNumber <= menu.size()));
+		
+		menu.remove(menuNumber - 1);
+		
+		System.out.println("Successfully removed from menu");
+		utils.waitUser();
 	}
 	
 	// 3
