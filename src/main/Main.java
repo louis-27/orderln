@@ -10,6 +10,10 @@ import products.Food;
 import products.Product;
 import users.Admin;
 import users.Customer;
+import users.Driver;
+import vehicles.Bike;
+import vehicles.Car;
+import vehicles.Vehicle;
 
 public class Main {
 	
@@ -23,7 +27,10 @@ public class Main {
 	
 	// Customer
 	static ArrayList<Order> myCart = new ArrayList<>();
-
+	
+	// Driver
+	static ArrayList<Driver> drivers = new ArrayList<>();
+	
 	public Main() {
 		init();
 		
@@ -34,15 +41,16 @@ public class Main {
 			utils.orderInScreen();
 			
 			System.out.println("1. Customer");
-			System.out.println("2. Admin");
-			System.out.println("3. Exit");
+			System.out.println("2. Driver");
+			System.out.println("3. Admin");
+			System.out.println("4. Exit");
 			
 			int inp;
 			do {				
 				System.out.print("Continue as: ");
 				inp = scan.nextInt();
 				scan.nextLine();
-			} while (!(inp >= 1 && inp <= 3));
+			} while (!(inp >= 1 && inp <= 4));
 			
 			utils.clearScreen();
 			switch (inp) {
@@ -50,9 +58,12 @@ public class Main {
 					customerMenu();
 					break;
 				case 2:
-					adminMenu();
+					driverMenu();
 					break;
 				case 3:
+					adminMenu();
+					break;
+				case 4:
 					utils.orderInScreen();
 					isRunning = false;
 					break;
@@ -76,6 +87,30 @@ public class Main {
 		menu.add(new Beverages("Tea", 9000));
 		menu.add(new Beverages("Iced Tea", 11000));
 		menu.add(new Beverages("Boba", 20000));
+		
+		/**
+		 * Insert dummy data for drivers
+		 * */
+		Vehicle bike1 = new Bike();
+		bike1.name = "Yamaha";
+		bike1.licensePlate = "A 1234 XY";
+
+		Vehicle car1 = new Car();
+		car1.name = "Hyundai";
+		car1.licensePlate = "B 1234 XY";
+		
+		Vehicle bike2 = new Bike();
+		bike2.name = "Suzuki";
+		bike2.licensePlate = "C 1234 XY";
+
+		Vehicle car2 = new Car();
+		car2.name = "Toyota";
+		car2.licensePlate = "D 1234 XY";
+
+		drivers.add(new Driver("Budi", "Available", bike1));
+		drivers.add(new Driver("Cecep", "Available", bike2));
+		drivers.add(new Driver("Dodi", "Available", car1));
+		drivers.add(new Driver("Evan", "Available", car2));
 	}
 	
 	// 1
@@ -164,6 +199,46 @@ public class Main {
 		}
 	}
 	
+	public void driverMenu() {
+		String name, cancel;
+		do {
+			System.out.print("Login as: ");
+			name = scan.nextLine();
+			
+			if (!validateDriverName(name)) {
+				do {
+					System.out.printf("Cannot find %s on our drivers list. Do you want to go back? [Yes | No] ", name);
+					cancel = scan.nextLine();
+					
+					if (cancel.equalsIgnoreCase("Yes")) {
+						return;
+					}
+				} while (!(cancel.equalsIgnoreCase("Yes") || cancel.equalsIgnoreCase("No")));
+			}
+		} while (!validateDriverName(name));
+		
+		utils.clearScreen();
+		if (orders.isEmpty()) {
+			System.out.println("There are no orders yet.");
+			utils.waitUser();
+			return;
+		}
+		
+		printOrders();
+		
+		int orderNumber;
+		do {
+			System.out.printf("Take which order [1 - %d]: ", orders.size());
+			orderNumber = scan.nextInt();
+			scan.nextLine();
+		} while (!(orderNumber >= 1 && orderNumber <= orders.size()));
+		
+		orders.remove(orderNumber - 1);
+		
+		System.out.println("Order is now taken.");
+		utils.waitUser();
+	}
+	
 	public void printOrders() {
 		System.out.println("Orders");
 		System.out.println("========================================================================");
@@ -205,6 +280,16 @@ public class Main {
 	
 	public boolean validateAdminPassword(String password) {
 		return (password.equals(admin.getPassword()));
+	}
+	
+	public boolean validateDriverName(String name) {
+		for (Driver driver : drivers) {
+			if (driver.getName().equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	// 2
