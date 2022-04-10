@@ -62,7 +62,7 @@ public class Main {
 	
 	public void init() {
 		/**
-		 * Insert dummy datas for menu & admin
+		 * Insert dummy datas for menu
 		 * */
 		
 		menu.add(new Food("Nasi Padang", 20000));
