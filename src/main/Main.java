@@ -8,6 +8,7 @@ import orders.Order;
 import products.Beverages;
 import products.Food;
 import products.Product;
+import users.Admin;
 import users.Customer;
 
 public class Main {
@@ -16,6 +17,7 @@ public class Main {
 	static Utils utils = new Utils();
 	
 	// Restaurant
+	static final Admin admin = new Admin("admin", "admin123");
 	static ArrayList<Product> menu = new ArrayList<>();
 	static ArrayList<Customer> orders = new ArrayList<>();
 	
