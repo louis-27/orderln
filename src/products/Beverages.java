@@ -9,6 +9,10 @@ public class Beverages extends Product implements Discountable {
 	public Beverages(String name, double price) {
 		super(name, price);
 	}
+	
+	public void refill() {
+		System.out.printf("%s refilled!", getName());
+	}
 
 	@Override
 	public boolean isDiscounted() {

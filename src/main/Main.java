@@ -342,6 +342,12 @@ public class Main {
 			price = scan.nextDouble();
 		} while (!(price > 0));
 		
+		/**
+		 * Polymorphism:
+		 * Adding new menu depending on their type
+		 * - instantiate Food class for menu with type of "Food" 
+		 * - instantiate Beverages class for menu with type of "Beverage" 
+		 * */
 		if (type.equalsIgnoreCase("Food")) {
 			menu.add(new Food(name, price));
 		} else if (type.equalsIgnoreCase("Beverage")) {
