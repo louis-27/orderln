@@ -1,7 +1,20 @@
 package users;
 
-public abstract class User {
+public class User {
 
-	protected String name;
+	private String name;
 
+	public User(String name) {
+		super();
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 }

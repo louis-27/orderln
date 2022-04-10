@@ -1,9 +1,22 @@
 package users;
 
-public class Customer {
+import orders.Cart;
 
-	public Customer() {
-		// TODO Auto-generated constructor stub
+public class Customer extends User {
+	
+	private Cart cart;
+
+	public Customer(String name, Cart cart) {
+		super(name);
+		this.cart = cart;
 	}
 
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+	
 }
